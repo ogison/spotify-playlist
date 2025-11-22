@@ -213,20 +213,6 @@ npm run build
 npm run start
 ```
 
-## 今後の拡張予定
-
-### 優先度: 高
-- [ ] テスト環境（Jest + React Testing Library）
-- [ ] Storybook導入
-- [ ] CI/CDパイプライン強化
-- [ ] API設計ガイドライン
-
-### 優先度: 中
-- [ ] 認証システム統合
-- [ ] データベース接続
-- [ ] ロギング・モニタリング
-- [ ] エラートラッキング（Sentry等）
-
 ## 参考リソース
 
 - [Next.js公式ドキュメント](https://nextjs.org/docs)

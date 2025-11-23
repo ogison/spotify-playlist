@@ -85,25 +85,25 @@ src/app/api/
 
 ### エンドポイント命名
 
-| ルール | 例 | 説明 |
-|--------|-----|------|
-| **小文字** | `/api/users` | すべて小文字を使用 |
-| **複数形** | `/api/posts` | リソースは複数形 |
-| **kebab-case** | `/api/user-profiles` | 複数単語はハイフン区切り |
-| **階層構造** | `/api/users/[id]/posts` | 関連リソースは階層化 |
+| ルール         | 例                      | 説明                     |
+| -------------- | ----------------------- | ------------------------ |
+| **小文字**     | `/api/users`            | すべて小文字を使用       |
+| **複数形**     | `/api/posts`            | リソースは複数形         |
+| **kebab-case** | `/api/user-profiles`    | 複数単語はハイフン区切り |
+| **階層構造**   | `/api/users/[id]/posts` | 関連リソースは階層化     |
 
 ### ファイル命名
 
 ```typescript
 // ✅ 良い例
-src/app/api/users/route.ts
-src/app/api/users/[id]/route.ts
-src/app/api/user-profiles/route.ts
+src / app / api / users / route.ts;
+src / app / api / users / [id] / route.ts;
+src / app / api / user - profiles / route.ts;
 
 // ❌ 悪い例
-src/app/api/Users/route.ts        // 大文字
-src/app/api/user/route.ts          // 単数形
-src/app/api/user_profiles/route.ts // スネークケース
+src / app / api / Users / route.ts; // 大文字
+src / app / api / user / route.ts; // 単数形
+src / app / api / user_profiles / route.ts; // スネークケース
 ```
 
 ---
@@ -112,29 +112,29 @@ src/app/api/user_profiles/route.ts // スネークケース
 
 ### 標準的なCRUD操作
 
-| メソッド | エンドポイント | 用途 | レスポンス |
-|---------|---------------|------|-----------|
-| **GET** | `/api/users` | ユーザー一覧取得 | 200 + データ配列 |
-| **GET** | `/api/users/[id]` | 特定ユーザー取得 | 200 + データ / 404 |
-| **POST** | `/api/users` | ユーザー作成 | 201 + 作成データ |
-| **PUT** | `/api/users/[id]` | ユーザー更新（全体） | 200 + 更新データ |
-| **PATCH** | `/api/users/[id]` | ユーザー更新（部分） | 200 + 更新データ |
-| **DELETE** | `/api/users/[id]` | ユーザー削除 | 204 / 200 |
+| メソッド   | エンドポイント    | 用途                 | レスポンス         |
+| ---------- | ----------------- | -------------------- | ------------------ |
+| **GET**    | `/api/users`      | ユーザー一覧取得     | 200 + データ配列   |
+| **GET**    | `/api/users/[id]` | 特定ユーザー取得     | 200 + データ / 404 |
+| **POST**   | `/api/users`      | ユーザー作成         | 201 + 作成データ   |
+| **PUT**    | `/api/users/[id]` | ユーザー更新（全体） | 200 + 更新データ   |
+| **PATCH**  | `/api/users/[id]` | ユーザー更新（部分） | 200 + 更新データ   |
+| **DELETE** | `/api/users/[id]` | ユーザー削除         | 204 / 200          |
 
 ### 実装例
 
 ```typescript
 // src/app/api/users/route.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 // GET /api/users
 export async function GET(request: NextRequest) {
   try {
     // クエリパラメータの取得
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') ?? '1');
-    const limit = parseInt(searchParams.get('limit') ?? '10');
+    const page = parseInt(searchParams.get("page") ?? "1");
+    const limit = parseInt(searchParams.get("limit") ?? "10");
 
     const users = await fetchUsers({ page, limit });
 
@@ -147,10 +147,10 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Failed to fetch users:', error);
+    console.error("Failed to fetch users:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch users' },
-      { status: 500 }
+      { error: "Failed to fetch users" },
+      { status: 500 },
     );
   }
 }
@@ -163,23 +163,17 @@ export async function POST(request: NextRequest) {
     // バリデーション
     const validationError = validateUser(body);
     if (validationError) {
-      return NextResponse.json(
-        { error: validationError },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: validationError }, { status: 400 });
     }
 
     const user = await createUser(body);
 
-    return NextResponse.json(
-      { data: user },
-      { status: 201 }
-    );
+    return NextResponse.json({ data: user }, { status: 201 });
   } catch (error) {
-    console.error('Failed to create user:', error);
+    console.error("Failed to create user:", error);
     return NextResponse.json(
-      { error: 'Failed to create user' },
-      { status: 500 }
+      { error: "Failed to create user" },
+      { status: 500 },
     );
   }
 }
@@ -192,37 +186,28 @@ interface RouteParams {
 }
 
 // GET /api/users/:id
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams
-) {
+export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
     const user = await fetchUserById(id);
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     return NextResponse.json({ data: user });
   } catch (error) {
     console.error(`Failed to fetch user ${id}:`, error);
     return NextResponse.json(
-      { error: 'Failed to fetch user' },
-      { status: 500 }
+      { error: "Failed to fetch user" },
+      { status: 500 },
     );
   }
 }
 
 // PUT /api/users/:id
-export async function PUT(
-  request: NextRequest,
-  { params }: RouteParams
-) {
+export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
     const body = await request.json();
@@ -230,54 +215,42 @@ export async function PUT(
     // バリデーション
     const validationError = validateUser(body);
     if (validationError) {
-      return NextResponse.json(
-        { error: validationError },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: validationError }, { status: 400 });
     }
 
     const user = await updateUser(id, body);
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     return NextResponse.json({ data: user });
   } catch (error) {
     console.error(`Failed to update user ${id}:`, error);
     return NextResponse.json(
-      { error: 'Failed to update user' },
-      { status: 500 }
+      { error: "Failed to update user" },
+      { status: 500 },
     );
   }
 }
 
 // DELETE /api/users/:id
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams
-) {
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
     const deleted = await deleteUser(id);
 
     if (!deleted) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error(`Failed to delete user ${id}:`, error);
     return NextResponse.json(
-      { error: 'Failed to delete user' },
-      { status: 500 }
+      { error: "Failed to delete user" },
+      { status: 500 },
     );
   }
 }
@@ -294,15 +267,15 @@ export async function DELETE(
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
-  const page = parseInt(searchParams.get('page') ?? '1');
-  const limit = parseInt(searchParams.get('limit') ?? '10');
-  const sort = searchParams.get('sort') ?? 'createdAt';
+  const page = parseInt(searchParams.get("page") ?? "1");
+  const limit = parseInt(searchParams.get("limit") ?? "10");
+  const sort = searchParams.get("sort") ?? "createdAt";
 
   // バリデーション
   if (page < 1 || limit < 1 || limit > 100) {
     return NextResponse.json(
-      { error: 'Invalid pagination parameters' },
-      { status: 400 }
+      { error: "Invalid pagination parameters" },
+      { status: 400 },
     );
   }
 
@@ -332,8 +305,8 @@ export async function POST(request: NextRequest) {
     // バリデーション
     if (!name || !email || !password) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
+        { error: "Missing required fields" },
+        { status: 400 },
       );
     }
 
@@ -342,16 +315,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ data: user }, { status: 201 });
   } catch (error) {
     if (error instanceof SyntaxError) {
-      return NextResponse.json(
-        { error: 'Invalid JSON' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
     }
 
-    console.error('Failed to create user:', error);
+    console.error("Failed to create user:", error);
     return NextResponse.json(
-      { error: 'Failed to create user' },
-      { status: 500 }
+      { error: "Failed to create user" },
+      { status: 500 },
     );
   }
 }
@@ -362,23 +332,17 @@ export async function POST(request: NextRequest) {
 ```typescript
 export async function GET(request: NextRequest) {
   // 認証トークンの取得
-  const token = request.headers.get('Authorization')?.replace('Bearer ', '');
+  const token = request.headers.get("Authorization")?.replace("Bearer ", "");
 
   if (!token) {
-    return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   // トークン検証
   const user = await verifyToken(token);
 
   if (!user) {
-    return NextResponse.json(
-      { error: 'Invalid token' },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 
   // ...
@@ -475,13 +439,13 @@ export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
 ```typescript
 // src/lib/api-response.ts
 
-import { NextResponse } from 'next/server';
-import type { ApiSuccessResponse, ApiErrorResponse } from '@/types/api';
+import { NextResponse } from "next/server";
+import type { ApiSuccessResponse, ApiErrorResponse } from "@/types/api";
 
 export function successResponse<T>(
   data: T,
-  meta?: ApiSuccessResponse<T>['meta'],
-  status = 200
+  meta?: ApiSuccessResponse<T>["meta"],
+  status = 200,
 ) {
   const response: ApiSuccessResponse<T> = { data };
   if (meta) response.meta = meta;
@@ -492,7 +456,7 @@ export function successResponse<T>(
 export function errorResponse(
   error: string,
   status = 500,
-  details?: ApiErrorResponse['details']
+  details?: ApiErrorResponse["details"],
 ) {
   const response: ApiErrorResponse = { error };
   if (details) response.details = details;
@@ -506,7 +470,7 @@ export async function GET() {
     const users = await fetchUsers();
     return successResponse(users);
   } catch (error) {
-    return errorResponse('Failed to fetch users', 500);
+    return errorResponse("Failed to fetch users", 500);
   }
 }
 ```
@@ -523,27 +487,24 @@ export async function GET(request: NextRequest) {
     const data = await fetchData();
     return NextResponse.json({ data });
   } catch (error) {
-    console.error('API Error:', error);
+    console.error("API Error:", error);
 
     // 既知のエラー
     if (error instanceof NotFoundError) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 404 });
     }
 
     if (error instanceof ValidationError) {
       return NextResponse.json(
         { error: error.message, details: error.details },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // 未知のエラー
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }
@@ -557,34 +518,34 @@ export async function GET(request: NextRequest) {
 export class ApiError extends Error {
   constructor(
     message: string,
-    public statusCode: number = 500
+    public statusCode: number = 500,
   ) {
     super(message);
-    this.name = 'ApiError';
+    this.name = "ApiError";
   }
 }
 
 export class NotFoundError extends ApiError {
   constructor(resource: string) {
     super(`${resource} not found`, 404);
-    this.name = 'NotFoundError';
+    this.name = "NotFoundError";
   }
 }
 
 export class ValidationError extends ApiError {
   constructor(
     message: string,
-    public details?: Array<{ field: string; message: string }>
+    public details?: Array<{ field: string; message: string }>,
   ) {
     super(message, 400);
-    this.name = 'ValidationError';
+    this.name = "ValidationError";
   }
 }
 
 export class UnauthorizedError extends ApiError {
-  constructor(message = 'Unauthorized') {
+  constructor(message = "Unauthorized") {
     super(message, 401);
-    this.name = 'UnauthorizedError';
+    this.name = "UnauthorizedError";
   }
 }
 
@@ -595,7 +556,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const user = await fetchUserById(id);
 
     if (!user) {
-      throw new NotFoundError('User');
+      throw new NotFoundError("User");
     }
 
     return NextResponse.json({ data: user });
@@ -603,14 +564,14 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     if (error instanceof ApiError) {
       return NextResponse.json(
         { error: error.message },
-        { status: error.statusCode }
+        { status: error.statusCode },
       );
     }
 
-    console.error('Unexpected error:', error);
+    console.error("Unexpected error:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }
@@ -628,12 +589,12 @@ npm install zod
 
 ```typescript
 // src/lib/validators/user.ts
-import { z } from 'zod';
+import { z } from "zod";
 
 export const createUserSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100),
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  name: z.string().min(1, "Name is required").max(100),
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 export const updateUserSchema = z.object({
@@ -647,7 +608,7 @@ export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 
 ```typescript
 // src/app/api/users/route.ts
-import { createUserSchema } from '@/lib/validators/user';
+import { createUserSchema } from "@/lib/validators/user";
 
 export async function POST(request: NextRequest) {
   try {
@@ -659,13 +620,13 @@ export async function POST(request: NextRequest) {
     if (!result.success) {
       return NextResponse.json(
         {
-          error: 'Validation failed',
+          error: "Validation failed",
           details: result.error.errors.map((err) => ({
-            field: err.path.join('.'),
+            field: err.path.join("."),
             message: err.message,
           })),
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -673,10 +634,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ data: user }, { status: 201 });
   } catch (error) {
-    console.error('Failed to create user:', error);
+    console.error("Failed to create user:", error);
     return NextResponse.json(
-      { error: 'Failed to create user' },
-      { status: 500 }
+      { error: "Failed to create user" },
+      { status: 500 },
     );
   }
 }
@@ -690,10 +651,10 @@ export async function POST(request: NextRequest) {
 
 ```typescript
 // src/lib/auth.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export async function authenticate(request: NextRequest) {
-  const token = request.headers.get('Authorization')?.replace('Bearer ', '');
+  const token = request.headers.get("Authorization")?.replace("Bearer ", "");
 
   if (!token) {
     return null;
@@ -709,16 +670,16 @@ export async function authenticate(request: NextRequest) {
 }
 
 export function requireAuth(
-  handler: (request: NextRequest, context: { user: User }) => Promise<NextResponse>
+  handler: (
+    request: NextRequest,
+    context: { user: User },
+  ) => Promise<NextResponse>,
 ) {
   return async (request: NextRequest) => {
     const user = await authenticate(request);
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     return handler(request, { user });
@@ -739,23 +700,20 @@ export const GET = requireAuth(async (request, { user }) => {
 // src/lib/auth.ts
 export function requireRole(roles: string[]) {
   return (
-    handler: (request: NextRequest, context: { user: User }) => Promise<NextResponse>
+    handler: (
+      request: NextRequest,
+      context: { user: User },
+    ) => Promise<NextResponse>,
   ) => {
     return async (request: NextRequest) => {
       const user = await authenticate(request);
 
       if (!user) {
-        return NextResponse.json(
-          { error: 'Unauthorized' },
-          { status: 401 }
-        );
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
 
       if (!roles.includes(user.role)) {
-        return NextResponse.json(
-          { error: 'Forbidden' },
-          { status: 403 }
-        );
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
 
       return handler(request, { user });
@@ -764,7 +722,7 @@ export function requireRole(roles: string[]) {
 }
 
 // 使用例
-export const DELETE = requireRole(['admin'])(async (request, { user }) => {
+export const DELETE = requireRole(["admin"])(async (request, { user }) => {
   // adminロールのみアクセス可能
   await deleteAllUsers();
   return new NextResponse(null, { status: 204 });
@@ -777,20 +735,20 @@ export const DELETE = requireRole(['admin'])(async (request, { user }) => {
 
 ### 標準的な使用
 
-| コード | 意味 | 使用例 |
-|-------|------|--------|
-| **200** | OK | GET, PUT, PATCHの成功 |
-| **201** | Created | POSTでリソース作成成功 |
-| **204** | No Content | DELETEの成功（レスポンスボディなし） |
-| **400** | Bad Request | バリデーションエラー |
-| **401** | Unauthorized | 認証が必要 |
-| **403** | Forbidden | 権限不足 |
-| **404** | Not Found | リソースが存在しない |
-| **409** | Conflict | リソースの競合（例: 重複メールアドレス） |
-| **422** | Unprocessable Entity | セマンティックエラー |
-| **429** | Too Many Requests | レート制限超過 |
-| **500** | Internal Server Error | サーバーエラー |
-| **503** | Service Unavailable | サービス一時停止 |
+| コード  | 意味                  | 使用例                                   |
+| ------- | --------------------- | ---------------------------------------- |
+| **200** | OK                    | GET, PUT, PATCHの成功                    |
+| **201** | Created               | POSTでリソース作成成功                   |
+| **204** | No Content            | DELETEの成功（レスポンスボディなし）     |
+| **400** | Bad Request           | バリデーションエラー                     |
+| **401** | Unauthorized          | 認証が必要                               |
+| **403** | Forbidden             | 権限不足                                 |
+| **404** | Not Found             | リソースが存在しない                     |
+| **409** | Conflict              | リソースの競合（例: 重複メールアドレス） |
+| **422** | Unprocessable Entity  | セマンティックエラー                     |
+| **429** | Too Many Requests     | レート制限超過                           |
+| **500** | Internal Server Error | サーバーエラー                           |
+| **503** | Service Unavailable   | サービス一時停止                         |
 
 ---
 
@@ -801,7 +759,7 @@ export const DELETE = requireRole(['admin'])(async (request, { user }) => {
 #### 1. 入力検証・サニタイゼーション
 
 ```typescript
-import { z } from 'zod';
+import { z } from "zod";
 
 // すべての入力を検証
 const schema = z.object({
@@ -821,11 +779,11 @@ export async function GET(request: NextRequest) {
     { data },
     {
       headers: {
-        'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN ?? '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        "Access-Control-Allow-Origin": process.env.ALLOWED_ORIGIN ?? "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
       },
-    }
+    },
   );
 }
 
@@ -833,9 +791,9 @@ export async function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN ?? '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      "Access-Control-Allow-Origin": process.env.ALLOWED_ORIGIN ?? "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
     },
   });
 }
@@ -845,7 +803,7 @@ export async function OPTIONS() {
 
 ```typescript
 // src/lib/rate-limit.ts
-import { LRUCache } from 'lru-cache';
+import { LRUCache } from "lru-cache";
 
 const ratelimit = new LRUCache({
   max: 500,
@@ -865,13 +823,10 @@ export function rateLimit(identifier: string, limit = 10) {
 
 // 使用例
 export async function POST(request: NextRequest) {
-  const ip = request.ip ?? 'unknown';
+  const ip = request.ip ?? "unknown";
 
   if (!rateLimit(ip, 10)) {
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
   // ...
@@ -908,9 +863,9 @@ export async function GET() {
     { data: posts },
     {
       headers: {
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
       },
-    }
+    },
   );
 }
 ```
@@ -920,8 +875,8 @@ export async function GET() {
 ```typescript
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const page = parseInt(searchParams.get('page') ?? '1');
-  const limit = parseInt(searchParams.get('limit') ?? '20');
+  const page = parseInt(searchParams.get("page") ?? "1");
+  const limit = parseInt(searchParams.get("limit") ?? "20");
 
   const offset = (page - 1) * limit;
 
@@ -950,30 +905,30 @@ export async function GET(request: NextRequest) {
 
 ```typescript
 // src/app/api/users/route.test.ts
-import { GET, POST } from './route';
-import { NextRequest } from 'next/server';
+import { GET, POST } from "./route";
+import { NextRequest } from "next/server";
 
-describe('/api/users', () => {
-  describe('GET', () => {
-    it('should return users list', async () => {
-      const request = new NextRequest('http://localhost:3000/api/users');
+describe("/api/users", () => {
+  describe("GET", () => {
+    it("should return users list", async () => {
+      const request = new NextRequest("http://localhost:3000/api/users");
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toHaveProperty('data');
+      expect(data).toHaveProperty("data");
       expect(Array.isArray(data.data)).toBe(true);
     });
   });
 
-  describe('POST', () => {
-    it('should create a new user', async () => {
-      const request = new NextRequest('http://localhost:3000/api/users', {
-        method: 'POST',
+  describe("POST", () => {
+    it("should create a new user", async () => {
+      const request = new NextRequest("http://localhost:3000/api/users", {
+        method: "POST",
         body: JSON.stringify({
-          name: 'Test User',
-          email: 'test@example.com',
-          password: 'password123',
+          name: "Test User",
+          email: "test@example.com",
+          password: "password123",
         }),
       });
 
@@ -981,15 +936,15 @@ describe('/api/users', () => {
       const data = await response.json();
 
       expect(response.status).toBe(201);
-      expect(data.data).toHaveProperty('id');
+      expect(data.data).toHaveProperty("id");
     });
 
-    it('should return 400 for invalid data', async () => {
-      const request = new NextRequest('http://localhost:3000/api/users', {
-        method: 'POST',
+    it("should return 400 for invalid data", async () => {
+      const request = new NextRequest("http://localhost:3000/api/users", {
+        method: "POST",
         body: JSON.stringify({
-          name: '',
-          email: 'invalid-email',
+          name: "",
+          email: "invalid-email",
         }),
       });
 
@@ -1007,7 +962,7 @@ describe('/api/users', () => {
 
 ```typescript
 // src/app/api/health/route.ts
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
@@ -1015,18 +970,18 @@ export async function GET() {
     // await db.ping();
 
     return NextResponse.json({
-      status: 'ok',
+      status: "ok",
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
     });
   } catch (error) {
-    console.error('Health check failed:', error);
+    console.error("Health check failed:", error);
     return NextResponse.json(
       {
-        status: 'error',
+        status: "error",
         timestamp: new Date().toISOString(),
       },
-      { status: 503 }
+      { status: 503 },
     );
   }
 }
@@ -1054,6 +1009,7 @@ export async function GET() {
 ---
 
 **参考リソース:**
+
 - [Next.js Route Handlers](https://nextjs.org/docs/app/building-your-application/routing/route-handlers)
 - [REST API Design Best Practices](https://restfulapi.net/)
 - [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)

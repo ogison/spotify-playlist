@@ -7,12 +7,14 @@
 ## 技術スタック
 
 ### コア技術
+
 - **Next.js 16.0.3** - React フレームワーク（App Router）
 - **React 19.1.0** - UIライブラリ
 - **TypeScript 5** - 型安全性
 - **Tailwind CSS 4** - スタイリング
 
 ### 開発ツール
+
 - **Turbopack** - 高速バンドラー（dev/build）
 - **ESLint 9** - コード品質チェック
 - **Prettier 3** - コードフォーマット
@@ -71,6 +73,7 @@ src/features/
 ```
 
 **メリット:**
+
 - 機能単位での開発・保守が容易
 - コードの依存関係が明確
 - チーム開発でのコンフリクト軽減
@@ -90,11 +93,13 @@ External APIs / Database
 ### 3. Server Components vs Client Components
 
 **Server Components（デフォルト）:**
+
 - データフェッチ
 - SEO重視のコンテンツ
 - 静的なUI
 
 **Client Components（"use client"指定）:**
+
 - インタラクティブなUI
 - ブラウザAPIの使用
 - 状態管理が必要な場合
@@ -104,16 +109,19 @@ External APIs / Database
 ### コンポーネント分類
 
 #### 1. UIコンポーネント (`components/ui/`)
+
 - **責務**: 汎用的な表示・インタラクション
 - **特徴**: ビジネスロジックを含まない、再利用可能
 - **例**: Button, Input, Modal, Card
 
 #### 2. レイアウトコンポーネント (`components/layout/`)
+
 - **責務**: ページレイアウト構造
 - **特徴**: アプリ全体で共通の構造
 - **例**: Header, Footer, Sidebar, Navigation
 
 #### 3. 機能コンポーネント (`features/{feature}/components/`)
+
 - **責務**: 特定機能の実装
 - **特徴**: ビジネスロジックを含む、機能に特化
 - **例**: UserProfile, ProductList, CheckoutForm
@@ -129,14 +137,17 @@ External APIs / Database
 ## 状態管理戦略
 
 ### ローカル状態
+
 - `useState` / `useReducer`
 - 単一コンポーネント内で完結
 
 ### グローバル状態
+
 - React Context API
 - または状態管理ライブラリ（Zustand, Jotai等）
 
 ### サーバー状態
+
 - 推奨: React Query / SWR
 - キャッシュ・再フェッチ管理
 
@@ -166,11 +177,13 @@ src/app/
 ## スタイリング戦略
 
 ### Tailwind CSS 4
+
 - ユーティリティファーストのアプローチ
 - `@tailwindcss/postcss` プラグイン使用
 - `globals.css` でカスタムスタイル定義可能
 
 ### スタイル優先順位
+
 1. Tailwindユーティリティクラス
 2. CSS Modules（コンポーネント固有のスタイル）
 3. グローバルCSS（最小限に抑える）
@@ -178,23 +191,27 @@ src/app/
 ## パフォーマンス最適化
 
 ### 必須対応
+
 - ✅ Next.js Image コンポーネント使用
 - ✅ 動的インポート（`next/dynamic`）
 - ✅ React.memo / useMemo / useCallback の適切な使用
 - ✅ フォント最適化（`next/font`）
 
 ### Turbopack活用
+
 - 開発時の高速なHMR
 - ビルド時間の短縮
 
 ## セキュリティ
 
 ### 環境変数管理
+
 - `.env.local` に機密情報を保存
 - `NEXT_PUBLIC_` プレフィックスでクライアント公開
 - `.env.example` でテンプレート提供
 
 ### 必須対策
+
 - ユーザー入力の検証・サニタイゼーション
 - CSRF対策
 - XSS対策（React のデフォルト保護を活用）
@@ -203,11 +220,13 @@ src/app/
 ## デプロイメント
 
 ### 推奨プラットフォーム
+
 - **Vercel** - Next.js最適化済み
 - **Netlify** - 静的サイト
 - **AWS / GCP / Azure** - フルコントロール
 
 ### ビルドコマンド
+
 ```bash
 npm run build
 npm run start

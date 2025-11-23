@@ -7,6 +7,7 @@
 詳細な開発規約は **[rule/rule.md](../../rule/rule.md)** を参照してください。
 
 このファイルには以下の内容が含まれています:
+
 - プロジェクト構造
 - 命名規則（ファイル、変数、関数、型）
 - コンポーネント設計
@@ -22,12 +23,14 @@
 ### 必須事項（MUST）
 
 #### 1. 既存コードの確認
+
 ```markdown
 ✅ DO: 変更前に必ず対象ファイルを読む
 ❌ DON'T: 読まずに変更を提案する
 ```
 
 #### 2. 型安全性の厳守
+
 ```typescript
 ✅ DO: 厳格な型定義
 interface User {
@@ -47,6 +50,7 @@ if (isUser(data)) {
 ```
 
 #### 3. 規約に沿ったファイル配置
+
 ```
 ✅ DO: 機能ベースで整理
 src/features/user-profile/
@@ -59,6 +63,7 @@ src/app/UserProfile.tsx  // 禁止
 ```
 
 #### 4. インポートパスエイリアスの使用
+
 ```typescript
 ✅ DO: @/でsrcルートを参照
 import { Button } from '@/components/ui/Button';
@@ -69,14 +74,14 @@ import { Button } from '../../../../components/ui/Button';
 
 ### 命名規則クイックリファレンス
 
-| 対象 | 規則 | 例 |
-|------|------|-----|
-| **コンポーネント** | PascalCase | `UserProfile.tsx` |
-| **カスタムフック** | camelCase + use | `useAuth.ts` |
-| **ユーティリティ関数** | camelCase | `formatDate.ts` |
-| **型定義** | PascalCase | `User.types.ts` |
-| **定数** | UPPER_SNAKE_CASE | `API_BASE_URL` |
-| **appディレクトリ** | kebab-case | `user-profile/page.tsx` |
+| 対象                   | 規則             | 例                      |
+| ---------------------- | ---------------- | ----------------------- |
+| **コンポーネント**     | PascalCase       | `UserProfile.tsx`       |
+| **カスタムフック**     | camelCase + use  | `useAuth.ts`            |
+| **ユーティリティ関数** | camelCase        | `formatDate.ts`         |
+| **型定義**             | PascalCase       | `User.types.ts`         |
+| **定数**               | UPPER_SNAKE_CASE | `API_BASE_URL`          |
+| **appディレクトリ**    | kebab-case       | `user-profile/page.tsx` |
 
 ### コンポーネント作成テンプレート
 
@@ -111,11 +116,11 @@ export const Button: FC<ButtonProps> = ({
 
 ```typescript
 // src/hooks/useLocalStorage.ts
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export const useLocalStorage = <T>(key: string, initialValue: T) => {
   const [value, setValue] = useState<T>(() => {
-    if (typeof window === 'undefined') return initialValue;
+    if (typeof window === "undefined") return initialValue;
 
     try {
       const item = window.localStorage.getItem(key);
@@ -127,7 +132,7 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
   });
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     try {
       window.localStorage.setItem(key, JSON.stringify(value));
@@ -145,24 +150,28 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
 ### 絶対に避けるべきパターン
 
 1. **any型の使用**
+
    ```typescript
    ❌ const data: any = await fetch(...);
    ✅ const data: unknown = await fetch(...);
    ```
 
 2. **環境変数のハードコーディング**
+
    ```typescript
    ❌ const apiKey = "sk-1234567890";
    ✅ const apiKey = process.env.API_KEY;
    ```
 
 3. **console.logの残存**
+
    ```typescript
    ❌ console.log('debug info');  // 本番コードに残さない
    ✅ // 削除するか、適切なロガーを使用
    ```
 
 4. **未使用のimport**
+
    ```typescript
    ❌ import { useState, useEffect, useMemo } from 'react';  // useMemo未使用
    ✅ import { useState, useEffect } from 'react';
@@ -215,17 +224,17 @@ export const InteractiveButton = () => {
 ```typescript
 // ✅ API Route例
 // src/app/api/users/route.ts
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
     const users = await fetchUsers();
     return NextResponse.json({ users });
   } catch (error) {
-    console.error('Failed to fetch users:', error);
+    console.error("Failed to fetch users:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch users' },
-      { status: 500 }
+      { error: "Failed to fetch users" },
+      { status: 500 },
     );
   }
 }
@@ -236,12 +245,12 @@ export async function GET() {
 ```typescript
 // ✅ src/lib/config.ts
 export const config = {
-  apiUrl: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000',
-  isDev: process.env.NODE_ENV === 'development',
+  apiUrl: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000",
+  isDev: process.env.NODE_ENV === "development",
 } as const;
 
 // 使用例
-import { config } from '@/lib/config';
+import { config } from "@/lib/config";
 
 const response = await fetch(`${config.apiUrl}/api/users`);
 ```
@@ -268,21 +277,21 @@ const response = await fetch(`${config.apiUrl}/api/users`);
 
 ```typescript
 // 1. 外部ライブラリ
-import { FC } from 'react';
-import { useRouter } from 'next/navigation';
+import { FC } from "react";
+import { useRouter } from "next/navigation";
 
 // 2. 内部モジュール（@/エイリアス）
-import { Button } from '@/components/ui/Button';
-import { useAuth } from '@/hooks/useAuth';
+import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/hooks/useAuth";
 
 // 3. 相対パス
-import { formatDate } from './utils';
+import { formatDate } from "./utils";
 
 // 4. 型定義
-import type { User } from '@/types/User';
+import type { User } from "@/types/User";
 
 // 5. スタイル
-import styles from './Component.module.css';
+import styles from "./Component.module.css";
 ```
 
 ## 🔍 コードレビューチェックリスト

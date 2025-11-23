@@ -5,6 +5,7 @@ This file provides context and guidelines for AI coding agents working on this N
 ## Commands
 
 ### Development
+
 ```bash
 npm run dev          # Start development server with Turbopack
 npm run build        # Build for production with Turbopack
@@ -14,6 +15,7 @@ npm run format       # Format code with Prettier
 ```
 
 ### Pre-commit Hooks
+
 - Husky automatically runs `lint` and `format` on staged files before commit
 - Configured via lint-staged in package.json
 
@@ -46,6 +48,7 @@ next-js-template/
 ```
 
 ### Key Principles
+
 - **Feature-based architecture**: Organize by feature in `src/features/`
 - **UI vs Feature components**: Generic UI in `components/ui/`, feature-specific in `features/{name}/components/`
 - **App Router**: Routes in `src/app/` using Next.js 16 App Router conventions
@@ -53,6 +56,7 @@ next-js-template/
 ## Testing
 
 Currently, no test framework is configured. When adding tests:
+
 - Place test files adjacent to source files: `Component.test.tsx`
 - Use `npm test` command (to be configured)
 
@@ -60,18 +64,19 @@ Currently, no test framework is configured. When adding tests:
 
 ### Naming Conventions
 
-| Type | Convention | Example |
-|------|------------|---------|
-| Components | PascalCase | `UserProfile.tsx` |
-| Hooks | camelCase + use prefix | `useAuth.ts` |
-| Utils | camelCase | `formatDate.ts` |
-| Types | PascalCase | `User.types.ts` |
-| Constants | UPPER_SNAKE_CASE | `API_BASE_URL` |
-| App directories | kebab-case | `user-profile/page.tsx` |
+| Type            | Convention             | Example                 |
+| --------------- | ---------------------- | ----------------------- |
+| Components      | PascalCase             | `UserProfile.tsx`       |
+| Hooks           | camelCase + use prefix | `useAuth.ts`            |
+| Utils           | camelCase              | `formatDate.ts`         |
+| Types           | PascalCase             | `User.types.ts`         |
+| Constants       | UPPER_SNAKE_CASE       | `API_BASE_URL`          |
+| App directories | kebab-case             | `user-profile/page.tsx` |
 
 ### File Organization
 
 **MUST:**
+
 - Always read files before modifying them
 - Place UI components in `src/components/ui/`
 - Place feature code in `src/features/{feature-name}/`
@@ -80,6 +85,7 @@ Currently, no test framework is configured. When adding tests:
 - Keep files under 200 lines when possible
 
 **MUST NOT:**
+
 - Put all code directly in `src/app/`
 - Use `any` type (use `unknown` if necessary)
 - Hardcode API keys or secrets
@@ -96,11 +102,13 @@ Currently, no test framework is configured. When adding tests:
 ### Component Patterns
 
 **Server Components (default):**
+
 - Data fetching
 - SEO-critical content
 - Static UI
 
 **Client Components (`"use client"`):**
+
 - Interactive UI
 - Browser APIs
 - State management
@@ -108,6 +116,7 @@ Currently, no test framework is configured. When adding tests:
 ## Git Workflow
 
 ### Branch Strategy
+
 - Main branch: `main` (or as specified in project)
 - Feature branches: `feature/description` or `claude/description-{sessionId}`
 
@@ -116,6 +125,7 @@ Currently, no test framework is configured. When adding tests:
 Format: `<type>: <description>`
 
 Types:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -125,6 +135,7 @@ Types:
 - `chore`: Build process or tooling changes
 
 Examples:
+
 ```
 feat: add user authentication
 fix: resolve hydration error in header
@@ -132,6 +143,7 @@ docs: update API design guidelines
 ```
 
 ### Pre-commit Checks
+
 - ESLint runs automatically via Husky
 - Prettier formats code automatically
 - Fix any errors before committing
@@ -139,6 +151,7 @@ docs: update API design guidelines
 ## Boundaries & Constraints
 
 ### Technology Stack (DO NOT CHANGE)
+
 - Next.js 16.0.3 with App Router
 - React 19.1.0
 - TypeScript 5
@@ -148,11 +161,13 @@ docs: update API design guidelines
 ### Security Rules
 
 **NEVER:**
+
 - Commit secrets, API keys, or credentials
 - Use user input without validation
 - Skip sanitization of dynamic content
 
 **ALWAYS:**
+
 - Use environment variables for secrets (`.env.local`)
 - Validate and sanitize user input
 - Use `NEXT_PUBLIC_` prefix for client-exposed env vars
@@ -160,6 +175,7 @@ docs: update API design guidelines
 ### Performance Requirements
 
 **Required:**
+
 - Use Next.js `<Image>` component for images
 - Implement dynamic imports for large components
 - Use `React.memo`, `useMemo`, `useCallback` appropriately
@@ -168,6 +184,7 @@ docs: update API design guidelines
 ### Documentation
 
 Primary documentation is in **Japanese** in these locations:
+
 - `.claude/context/` - Claude Code specific context
 - `rule/rule.md` - Main coding standards
 - `rule/api-design.md` - API design guidelines

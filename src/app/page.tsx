@@ -1,5 +1,5 @@
-import Home from "@/features/home";
+import { PlaylistPlayer } from "@/features/playlist-player";
 
 export default function Page() {
-  return <Home />;
+  return <PlaylistPlayer />;
 }

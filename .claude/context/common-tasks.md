@@ -20,6 +20,7 @@
 ### UIコンポーネントの場合
 
 **チェックリスト:**
+
 - [ ] `src/components/ui/` 配下に配置
 - [ ] PascalCaseで命名
 - [ ] TypeScript型定義を含める
@@ -63,6 +64,7 @@ export const Card: FC<CardProps> = ({ children, title, className = '' }) => {
 ### 機能固有のコンポーネントの場合
 
 **チェックリスト:**
+
 - [ ] `src/features/{feature-name}/components/` 配下に配置
 - [ ] ビジネスロジックを含めてOK
 - [ ] 機能内のみで使用
@@ -129,6 +131,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({ user, onEdit }) => {
 ### 基本ページの場合
 
 **チェックリスト:**
+
 - [ ] `src/app/` 配下に配置
 - [ ] kebab-caseでディレクトリ命名
 - [ ] `page.tsx` ファイルを作成
@@ -209,6 +212,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 ## APIルート追加
 
 **チェックリスト:**
+
 - [ ] `src/app/api/` 配下に配置
 - [ ] `route.ts` ファイルを作成
 - [ ] エラーハンドリングを実装
@@ -224,7 +228,7 @@ mkdir -p src/app/api/users
 
 ```typescript
 // src/app/api/users/route.ts
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 // GET /api/users
 export async function GET() {
@@ -234,10 +238,10 @@ export async function GET() {
 
     return NextResponse.json({ users }, { status: 200 });
   } catch (error) {
-    console.error('Failed to fetch users:', error);
+    console.error("Failed to fetch users:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch users' },
-      { status: 500 }
+      { error: "Failed to fetch users" },
+      { status: 500 },
     );
   }
 }
@@ -250,8 +254,8 @@ export async function POST(request: Request) {
     // バリデーション
     if (!body.name || !body.email) {
       return NextResponse.json(
-        { error: 'Name and email are required' },
-        { status: 400 }
+        { error: "Name and email are required" },
+        { status: 400 },
       );
     }
 
@@ -260,10 +264,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ user }, { status: 201 });
   } catch (error) {
-    console.error('Failed to create user:', error);
+    console.error("Failed to create user:", error);
     return NextResponse.json(
-      { error: 'Failed to create user' },
-      { status: 500 }
+      { error: "Failed to create user" },
+      { status: 500 },
     );
   }
 }
@@ -284,18 +288,15 @@ export async function GET(request: Request, { params }: RouteParams) {
     const user = await fetchUserById(id);
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     return NextResponse.json({ user });
   } catch (error) {
     console.error(`Failed to fetch user ${id}:`, error);
     return NextResponse.json(
-      { error: 'Failed to fetch user' },
-      { status: 500 }
+      { error: "Failed to fetch user" },
+      { status: 500 },
     );
   }
 }
@@ -306,6 +307,7 @@ export async function GET(request: Request, { params }: RouteParams) {
 ## カスタムフック作成
 
 **チェックリスト:**
+
 - [ ] `src/hooks/` 配下に配置
 - [ ] camelCase + use prefix で命名
 - [ ] 型安全な戻り値
@@ -323,7 +325,7 @@ mkdir -p src/hooks
 
 ```typescript
 // src/hooks/useUsers.ts
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface User {
   id: string;
@@ -340,16 +342,16 @@ export const useUsers = () => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/users');
+        const response = await fetch("/api/users");
 
         if (!response.ok) {
-          throw new Error('Failed to fetch users');
+          throw new Error("Failed to fetch users");
         }
 
         const data = await response.json();
         setUsers(data.users);
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('Unknown error'));
+        setError(err instanceof Error ? err : new Error("Unknown error"));
       } finally {
         setLoading(false);
       }
@@ -366,11 +368,11 @@ export const useUsers = () => {
 
 ```typescript
 // src/hooks/useLocalStorage.ts
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export const useLocalStorage = <T>(key: string, initialValue: T) => {
   const [value, setValue] = useState<T>(() => {
-    if (typeof window === 'undefined') return initialValue;
+    if (typeof window === "undefined") return initialValue;
 
     try {
       const item = window.localStorage.getItem(key);
@@ -382,7 +384,7 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
   });
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     try {
       window.localStorage.setItem(key, JSON.stringify(value));
@@ -400,6 +402,7 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
 ## 機能モジュール追加
 
 **チェックリスト:**
+
 - [ ] `src/features/{feature-name}/` 配下に配置
 - [ ] 必要なサブディレクトリを作成
 - [ ] `index.ts` でエクスポート
@@ -485,6 +488,7 @@ export type { Todo } from './types';
 ## 環境変数追加
 
 **チェックリスト:**
+
 - [ ] `.env.example` に追加（値は空）
 - [ ] `.env.local` に実際の値を追加
 - [ ] 公開する場合は `NEXT_PUBLIC_` プレフィックス
@@ -506,7 +510,7 @@ echo "API_SECRET_KEY=your-secret-key" >> .env.local
 // 3. 設定ファイルで使用
 // src/lib/config.ts
 export const config = {
-  apiUrl: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000',
+  apiUrl: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000",
   apiSecretKey: process.env.API_SECRET_KEY,
 } as const;
 
@@ -527,12 +531,14 @@ declare namespace NodeJS {
 **手順:**
 
 1. **再現確認**
+
    ```bash
    # 再現手順を確認
    # エラーメッセージを記録
    ```
 
 2. **原因調査**
+
    ```bash
    # 関連ファイルを読む
    # ログを確認
@@ -540,6 +546,7 @@ declare namespace NodeJS {
    ```
 
 3. **修正実装**
+
    ```typescript
    // 最小限の変更で修正
    // 副作用がないか確認
@@ -556,6 +563,7 @@ declare namespace NodeJS {
 ## リファクタリング
 
 **原則:**
+
 - 動作を変えない
 - 一度に1つの変更
 - テストがある場合は先に実行
@@ -611,6 +619,7 @@ const formatFullName = (person: { firstName: string; lastName: string }) =>
 ---
 
 **参考:**
+
 - [アーキテクチャ概要](./architecture.md)
 - [コーディング規約](./conventions.md)
 - [詳細な開発規約](../../rule/rule.md)

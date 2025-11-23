@@ -7,19 +7,24 @@
 このプロジェクトには複数のドキュメントがあります。優先順位と役割を理解してください：
 
 ### 1. Claude Code専用コンテキスト（`.claude/context/`）
+
 - **[conventions.md](./context/conventions.md)** - コーディング規約のクイックリファレンス
 - **[architecture.md](./context/architecture.md)** - アーキテクチャ概要と設計パターン
 - **[common-tasks.md](./context/common-tasks.md)** - 頻繁に実行するタスクのガイド
 
 ### 2. プロジェクト開発規約（`rule/`）
+
 - **[rule/rule.md](../rule/rule.md)** - メインの開発規約（最も詳細）
 - **[rule/api-design.md](../rule/api-design.md)** - API設計ガイドライン
 
 ### 3. AI Agents向けドキュメント
+
 - **[AGENTS.md](../AGENTS.md)** - 全AI coding agents向けの標準コンテキスト（英語）
 
 ### 優先順位
+
 矛盾がある場合は以下の順で優先してください：
+
 1. `rule/rule.md` - プロジェクト固有の詳細規約
 2. `.claude/context/` ドキュメント群 - Claude Code向けの補足
 3. `AGENTS.md` - 一般的なAI agents向けガイドライン
@@ -29,6 +34,7 @@
 ### タスク開始前の必須チェック
 
 #### 1. ファイルを必ず読む
+
 ```typescript
 ❌ 悪い例：ファイルを読まずに変更提案
 ✅ 良い例：
@@ -38,6 +44,7 @@
 ```
 
 #### 2. 複数の関連ファイルを並行読み込み
+
 ```typescript
 // 効率的：複数のRead toolを1つのメッセージで実行
 ✅ Read tool: src/app/page.tsx
@@ -49,7 +56,9 @@
 ```
 
 #### 3. プロジェクト構造の理解
+
 新しい機能を追加する前に、既存のディレクトリ構造を確認：
+
 ```bash
 # Glob toolで既存の構造を確認
 src/features/**/
@@ -59,6 +68,7 @@ src/components/**/
 ### コード生成時の必須事項
 
 #### TypeScript型安全性
+
 ```typescript
 // ❌ 絶対禁止
 const user: any = { ... };
@@ -79,16 +89,18 @@ if (isUser(data)) {
 ```
 
 #### インポートパス
+
 ```typescript
 // ✅ DO: @/エイリアスを使用
-import { Button } from '@/components/ui/Button';
-import { useAuth } from '@/hooks/useAuth';
+import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/hooks/useAuth";
 
 // ❌ DON'T: 相対パスの乱用
-import { Button } from '../../../../components/ui/Button';
+import { Button } from "../../../../components/ui/Button";
 ```
 
 #### Server Component vs Client Component
+
 ```typescript
 // ✅ Server Component（デフォルト）- データフェッチ、SEO重視
 export default async function Page() {
@@ -110,6 +122,7 @@ export function Counter() {
 ### ファイル配置ルール
 
 #### コンポーネント
+
 ```
 ✅ 正しい配置：
 src/components/ui/Button.tsx          # 汎用UIコンポーネント
@@ -121,6 +134,7 @@ src/Button.tsx                        # srcルートに直接配置
 ```
 
 #### フック
+
 ```
 ✅ 正しい配置：
 src/hooks/useLocalStorage.ts          # 汎用フック
@@ -131,6 +145,7 @@ src/app/useLocalStorage.ts            # appディレクトリに配置
 ```
 
 #### ユーティリティ関数
+
 ```
 ✅ 正しい配置：
 src/utils/formatDate.ts               # 汎用ユーティリティ
@@ -140,16 +155,17 @@ src/features/todo/utils/sortTodos.ts  # 機能固有ユーティリティ
 ## 🔧 よくあるタスクのベストプラクティス
 
 ### 新規ページ追加
+
 ```typescript
 // 1. src/app/ 配下に作成（kebab-case）
-src/app/user-profile/page.tsx
+src / app / user - profile / page.tsx;
 
 // 2. Metadataを必ず設定
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'User Profile',
-  description: 'View and edit user profile',
+  title: "User Profile",
+  description: "View and edit user profile",
 };
 
 export default function UserProfilePage() {
@@ -158,25 +174,27 @@ export default function UserProfilePage() {
 ```
 
 ### 新規API追加
+
 ```typescript
 // src/app/api/users/route.ts
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
     const users = await fetchUsers();
     return NextResponse.json({ users }, { status: 200 });
   } catch (error) {
-    console.error('Failed to fetch users:', error);
+    console.error("Failed to fetch users:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch users' },
-      { status: 500 }
+      { error: "Failed to fetch users" },
+      { status: 500 },
     );
   }
 }
 ```
 
 ### 新規機能モジュール追加
+
 ```bash
 # ディレクトリ構造
 src/features/new-feature/
@@ -190,6 +208,7 @@ src/features/new-feature/
 ## 🚫 絶対に避けるべきこと
 
 ### セキュリティ
+
 ```typescript
 // ❌ APIキーのハードコーディング
 const API_KEY = "sk-1234567890abcdef";
@@ -202,6 +221,7 @@ const PUBLIC_URL = process.env.NEXT_PUBLIC_API_URL;
 ```
 
 ### パフォーマンス
+
 ```typescript
 // ❌ 通常の<img>タグ
 <img src="/image.jpg" alt="..." />
@@ -212,12 +232,13 @@ import Image from 'next/image';
 ```
 
 ### コード品質
+
 ```typescript
 // ❌ console.logを残す
-console.log('debug info');
+console.log("debug info");
 
 // ❌ 未使用のimport
-import { useState, useEffect, useMemo } from 'react';  // useMemo未使用
+import { useState, useEffect, useMemo } from "react"; // useMemo未使用
 
 // ❌ 200行を超える巨大コンポーネント
 export function GiantComponent() {
@@ -228,6 +249,7 @@ export function GiantComponent() {
 ## 📝 コミット時のルール
 
 ### コミットメッセージ形式
+
 ```
 <type>: <description>
 
@@ -238,7 +260,9 @@ docs: update architecture documentation
 ```
 
 ### Pre-commit自動実行
+
 Huskyが自動的に以下を実行します：
+
 - ESLint（コード品質チェック）
 - Prettier（コードフォーマット）
 
@@ -247,6 +271,7 @@ Huskyが自動的に以下を実行します：
 ## 🎨 スタイリング
 
 ### Tailwind CSS 4使用
+
 ```tsx
 // ✅ ユーティリティクラスの使用
 <button className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
@@ -262,37 +287,47 @@ Huskyが自動的に以下を実行します：
 ```
 
 ### グローバルスタイル
+
 `src/app/globals.css` で定義されています。必要に応じて追加可能ですが、最小限に抑えてください。
 
 ## 🔍 デバッグとトラブルシューティング
 
 ### 開発サーバーの起動
+
 ```bash
 npm run dev
 ```
+
 → http://localhost:3000 でアクセス
 
 ### ビルドエラーの確認
+
 ```bash
 npm run build
 ```
+
 → 本番ビルドが通るか確認
 
 ### Lintエラーの確認
+
 ```bash
 npm run lint
 ```
+
 → コード品質の問題を確認
 
 ### フォーマット実行
+
 ```bash
 npm run format
 ```
+
 → コード全体をフォーマット
 
 ## 📚 追加リソース
 
 ### 内部ドキュメント
+
 - [よくあるタスク](./context/common-tasks.md) - 具体的な実装例
 - [アーキテクチャ](./context/architecture.md) - 設計パターン
 - [コーディング規約](./context/conventions.md) - クイックリファレンス
@@ -300,6 +335,7 @@ npm run format
 - [API設計](../rule/api-design.md) - API設計ガイドライン
 
 ### 外部ドキュメント
+
 - [Next.js 公式ドキュメント](https://nextjs.org/docs)
 - [React 公式ドキュメント](https://react.dev)
 - [Tailwind CSS 公式ドキュメント](https://tailwindcss.com/docs)
@@ -308,6 +344,7 @@ npm run format
 ## 💡 Claude Codeへの期待事項
 
 ### 積極的に実行すべきこと
+
 - ✅ タスク開始前に関連ファイルを読む
 - ✅ 既存のコーディングスタイルに合わせる
 - ✅ 型安全性を最優先する
@@ -317,6 +354,7 @@ npm run format
 - ✅ わからないことは質問する
 
 ### 避けるべきこと
+
 - ❌ ファイルを読まずに変更する
 - ❌ any型を使用する
 - ❌ 環境変数をハードコーディングする
